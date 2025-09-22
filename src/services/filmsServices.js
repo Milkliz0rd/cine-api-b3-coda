@@ -8,7 +8,12 @@ export async function listFilms({ limit = 50, offset = 0 } = {}) {
   return rows;
 }
 
-// export async function getFilmById(id) {}
+export async function getFilmById(id) {
+  const sql =
+    "SELECT id, title, genre, director, year FROM films WHERE id = $1";
+  const rows = await query(sql, [id]);
+  return rows;
+}
 // export async function createFilm({ title, director, year, genre }) {}
 // export async function updateFilm(
 //   id,
