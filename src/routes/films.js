@@ -12,7 +12,7 @@ const router = Router();
 router.get("/", getListFilms);
 router.get("/:id", getFilm);
 router.post("/", createFilm);
-router.put("/:id", updateFilm);
+router.patch("/:id", updateFilm);
 router.delete("/:id", deleteFilm);
 
 export default router;

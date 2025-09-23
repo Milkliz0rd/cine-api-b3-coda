@@ -44,8 +44,7 @@ export async function createFilm(req, res, next) {
 export async function updateFilm(req, res, next) {
   try {
     const { id } = req.params;
-    const { title, director, year, genre } = req.body;
-    const filmUpdated = await majFilm(id, { title, director, year, genre });
+    const filmUpdated = await majFilm(id, req.body);
     res
       .status(200)
       .json({ message: "Film modifié avec succés !", film: filmUpdated });

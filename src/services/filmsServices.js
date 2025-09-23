@@ -38,35 +38,53 @@ export async function postFilm({ title, director, year, genre }) {
 }
 
 /** Mettre à jour un film */
-export async function majFilm(id, { title, director, year, genre }) {
+export async function majFilm(id, payload) {
   const filmId = Number(id);
   if (!Number.isInteger(filmId)) {
     const err = new Error("ID invalide");
     err.status = 400;
     throw err;
   }
-  if (!title || !director || !year || !genre) {
-    const err = new Error("Un des paramètres n'est pas valide");
-    err.status = 400;
-    throw err;
+  const fields = [];
+  const values = [];
+  let idx = 1;
+  if (payload.title !== undefined) {
+    fields.push(`title = $${idx++}`);
+    values.push(payload.title);
   }
-  const yearInt = Number(year);
-  if (!Number.isInteger(yearInt)) {
-    const err = new Error("L'année doit être entier");
+  if (payload.director !== undefined) {
+    fields.push(`director = $${idx++}`);
+    values.push(payload.director);
+  }
+  if (payload.year !== undefined) {
+    const y = Number(payload.year);
+    if (!Number.isInteger(y)) {
+      const e = new Error("L'année doit être un entier");
+      e.status = 400;
+      throw e;
+    }
+    fields.push(`year = $${idx++}`);
+    values.push(y);
+  }
+  if (payload.genre !== undefined) {
+    fields.push(`genre = $${idx++}`);
+    values.push(payload.genre);
+  }
+
+  if (fields.length === 0) {
+    const err = new Error("Aucun champ n'a été rempli.");
     err.status = 400;
     throw err;
   }
 
   const sql = `UPDATE films
-   SET title = $1, director = $2, year = $3, genre = $4
-   WHERE id = $5
-   RETURNING id, title, director, year, genre
-   `;
-  const values = [title, director, yearInt, genre, filmId];
-  console.log(values);
+  SET ${fields.join(", ")}
+  WHERE id = $${idx}
+  RETURNING id, title, director, year, genre
+  `;
+  values.push(filmId);
 
   const { rows } = await query(sql, values);
-
   if (rows.length === 0) {
     const err = new Error("Aucun film n'a été trouvé");
     err.status = 404;
