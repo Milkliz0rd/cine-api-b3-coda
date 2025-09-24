@@ -5,7 +5,6 @@ import swaggerUi from "swagger-ui-express";
 import { errorHandler } from "./middleware/errorHandler.js";
 import filmsRouter from "./routes/films.js";
 import reviewsRouter from "./routes/reviews.js";
-import swaggerJsDoc from "swagger-jsdoc";
 import { options } from "./swagger.js";
 
 const app = express();

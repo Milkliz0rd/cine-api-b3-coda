@@ -7,6 +7,17 @@ import {
   remFilm,
 } from "../services/filmsServices.js";
 
+const _films = [
+  {
+    id: 1,
+    title: "Totoro",
+    director: "Miyazaki",
+    year: 1988,
+    genre: "Animation",
+  },
+  { id: 2, title: "Inception", director: "Nolan", year: 2010, genre: "Sci-Fi" },
+];
+
 // TODO: lister les films
 export async function getListFilms(req, res, next) {
   try {

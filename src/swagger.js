@@ -282,7 +282,7 @@ export const options = {
               "application/json": {
                 schema: {
                   type: "array",
-                  items: { $ref: "#/components/schemas/commentaire" },
+                  items: { $ref: "#/components/schemas/Review" },
                 },
                 example: [
                   {
