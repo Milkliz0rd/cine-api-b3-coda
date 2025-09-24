@@ -1,6 +1,7 @@
 import {
   createNewReview,
   listReviewsByFilmId,
+  removeReview,
 } from "../services/reviewsServices.js";
 
 // TODO: lister les critiques d'un film
@@ -19,6 +20,7 @@ export async function listReviews(req, res, next) {
   }
 }
 
+// TODO: créer une critique liée à un film
 export async function createReview(req, res, next) {
   try {
     //Id doit être requis dans les params et entier
@@ -38,7 +40,6 @@ export async function createReview(req, res, next) {
     const rating = Number(req.body.rating);
     const author = req.body.author;
     const comment = req.body.comment;
-
     // on appel notre services
     const newReview = await createNewReview(id, { author, rating, comment });
     // renvoie un status 201 et un message de validation
@@ -54,6 +55,23 @@ export async function createReview(req, res, next) {
     next(error);
   }
 }
-// TODO: créer une critique liée à un film
 
 // TODO: supprimer une critique
+export async function deleteReview(req, res, next) {
+  try {
+    //On récupère l'objet id
+    const { id } = req.params;
+    // on fait appel au service accompagné de l'objet id
+    const deletedfilm = await removeReview(id);
+    //Réponse avec un status 200 et un message json
+    res
+      .status(200)
+      .json({ message: "Commentaire supprimé avec succès", film: deletedfilm });
+  } catch (error) {
+    //En cas d'erreur:
+    if (error.status) {
+      return res.status(error.status).json({ error: error.message });
+    }
+    next(error);
+  }
+}

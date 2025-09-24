@@ -63,7 +63,6 @@ export async function createNewReview(filmId, { author, rating, comment }) {
   `;
   //On définit une variable pour nos paramètres envoyé à la requête
   const params = [filmId, author.trim(), rating, comment.trim()];
-
   try {
     //construit la ligne avec les paramètres sql et les valeurs de ces derniers
     const { rows } = await query(sql, params);
@@ -79,4 +78,28 @@ export async function createNewReview(filmId, { author, rating, comment }) {
     throw error;
   }
 }
-// export async function deleteReview(id) {}
+export async function removeReview(id) {
+  // On vérifie que l'id est un nombre entier
+  const reviewId = Number(id);
+  if (!Number.isInteger(reviewId) || reviewId <= 0) {
+    const err = new Error("Id invalide");
+    err.status = 400;
+    throw err;
+  }
+  //On définit le corps de la requête sql en ajoutant un placeholder
+  const sql = `DELETE FROM reviews
+  WHERE id = $1
+  RETURNING author, rating, comment
+  `;
+  //on construit la ligne avec les paramètres sql et l'id
+  const { rows } = await query(sql, [reviewId]);
+
+  //On ajoute une condition si on a pas de ligne ajouté
+  if (rows.length === 0) {
+    const err = new Error("Aucun commentaire n'a été trouvé");
+    err.status = 400;
+    throw err;
+  }
+  //On retourne la ligne à inserer
+  return rows[0];
+}
