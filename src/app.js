@@ -5,7 +5,8 @@ import swaggerUi from "swagger-ui-express";
 import { errorHandler } from "./middleware/errorHandler.js";
 import filmsRouter from "./routes/films.js";
 import reviewsRouter from "./routes/reviews.js";
-// import { openApiSpec } from "./swagger.js";
+import swaggerJsDoc from "swagger-jsdoc";
+import { options } from "./swagger.js";
 
 const app = express();
 
@@ -18,8 +19,8 @@ app.get("/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-// Swagger UI
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(options));
+app.get("/api-docs.json", (req, res) => res.json(options));
 
 // Routes REST
 app.use("/films", filmsRouter);

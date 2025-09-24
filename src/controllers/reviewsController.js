@@ -70,7 +70,9 @@ export async function deleteReview(req, res, next) {
   } catch (error) {
     //En cas d'erreur:
     if (error.status) {
-      return res.status(error.status).json({ error: error.message });
+      return res
+        .status(error.status)
+        .json({ message: "Commentaire introuvable" });
     }
     next(error);
   }
