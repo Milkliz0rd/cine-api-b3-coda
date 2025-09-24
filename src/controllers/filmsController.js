@@ -1,4 +1,3 @@
-import { query } from "../db.js";
 import {
   listFilms,
   getFilmById,
@@ -7,21 +6,12 @@ import {
   remFilm,
 } from "../services/filmsServices.js";
 
-const _films = [
-  {
-    id: 1,
-    title: "Totoro",
-    director: "Miyazaki",
-    year: 1988,
-    genre: "Animation",
-  },
-  { id: 2, title: "Inception", director: "Nolan", year: 2010, genre: "Sci-Fi" },
-];
-
 // TODO: lister les films
 export async function getListFilms(req, res, next) {
   try {
+    // retour du service dans une variable
     const films = await listFilms();
+    // status 200 avec les films en json
     res.status(200).json(films);
   } catch (error) {
     next(error);
@@ -30,8 +20,11 @@ export async function getListFilms(req, res, next) {
 // // TODO: récupérer un film par id
 export async function getFilm(req, res, next) {
   try {
+    // récupère l'objet id dans les paramètres
     const { id } = req.params;
+    // retour du service dans une variable
     const filmById = await getFilmById(id);
+    // retour si film non trouvé
     if (!filmById) return res.status(404).json({ error: "film non trouvé" });
     res.status(200).json(filmById);
   } catch (error) {
@@ -41,8 +34,11 @@ export async function getFilm(req, res, next) {
 // // TODO: créer un film
 export async function createFilm(req, res, next) {
   try {
+    // récupère les objets dans le body
     const { title, director, year, genre } = req.body;
+    // retour du service avec les objets dans une variable
     const newFilm = await postFilm({ title, director, year, genre });
+    // réponse avec un message
     res.status(200).json({ message: "Film créé avec succès !", film: newFilm });
   } catch (error) {
     if (error.status) {
@@ -54,8 +50,11 @@ export async function createFilm(req, res, next) {
 // // TODO: mettre à jour un film
 export async function updateFilm(req, res, next) {
   try {
+    // récupère l'objet id dans les paramètres
     const { id } = req.params;
+    // retour du service dans une variable et les objets modifié
     const filmUpdated = await majFilm(id, req.body);
+    // réponse avec un message
     res
       .status(200)
       .json({ message: "Film modifié avec succés !", film: filmUpdated });
@@ -69,8 +68,11 @@ export async function updateFilm(req, res, next) {
 // // TODO: supprimer un film
 export async function deleteFilm(req, res, next) {
   try {
+    // récupère l'objet id dans les paramètres
     const { id } = req.params;
+    // retour du service dans une variable
     const deletedfilm = await remFilm(id);
+    // réponse avec un message
     res
       .status(200)
       .json({ message: "film supprimé avec succès", film: deletedfilm });

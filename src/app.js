@@ -17,8 +17,10 @@ app.use(morgan("dev"));
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });
 });
-
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(options));
+!(
+  //Routes API-docs
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(options))
+);
 app.get("/api-docs.json", (req, res) => res.json(options));
 
 // Routes REST

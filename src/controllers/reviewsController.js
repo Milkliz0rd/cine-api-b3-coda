@@ -7,13 +7,16 @@ import {
 // TODO: lister les critiques d'un film
 export async function listReviews(req, res, next) {
   try {
+    //Id doit être requis dans les params et entier
     const id = Number(req.params.id);
     if (!Number.isInteger(id) || id <= 0) {
       const err = new Error("Paramètre 'id' invalide");
       err.status = 400;
       throw err;
     }
+    // on appel notre services
     const reviewsList = await listReviewsByFilmId(id);
+    // renvoie un status 200 et la list en format json
     res.status(200).json(reviewsList);
   } catch (error) {
     next(error);

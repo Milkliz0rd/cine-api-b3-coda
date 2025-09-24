@@ -1,29 +1,36 @@
 import { query } from "../db.js";
 
+/** Reviews list by film */
 export async function listReviewsByFilmId(
   filmId,
   { limit = 50, offset = 0 } = {}
 ) {
+  //On vérifie que film ID est un nombre entier supérieur à 0
   if (!Number.isInteger(filmId) || filmId <= 0) {
     const err = new Error("filmId invalide");
     err.status = 400;
     throw err;
   }
+  //on créé la requête sql
   const sql = `SELECT *
   FROM reviews
   WHERE film_id = $1
   ORDER BY created_at DESC
   LIMIT $2 OFFSET $3
   `;
+  // On créé notre ligne qui contient la requête sql et qui a en paramètre filmId, limit et offset
   const { rows } = await query(sql, [filmId, limit, offset]);
+  // si il n'y a pas de ligne, renvoie une erreur
   if (rows.length === 0) {
     const err = new Error("Aucune reviews n'a été trouvé");
     err.status = 404;
     throw err;
   }
+  // On retourne nos lignes
   return rows;
 }
 
+/** Create a Review */
 export async function createNewReview(filmId, { author, rating, comment }) {
   // On vérifie que le filmId est un entier supérieur à 0
   if (!Number.isInteger(filmId) || filmId <= 0) {
@@ -78,6 +85,8 @@ export async function createNewReview(filmId, { author, rating, comment }) {
     throw error;
   }
 }
+
+/** Remove a review */
 export async function removeReview(id) {
   // On vérifie que l'id est un nombre entier
   const reviewId = Number(id);
